@@ -36,7 +36,7 @@ func main() {
   startTime = time.Now()
 
   // start monitorin
-  fmt.Printf("Starting with interval %s seconds\n", INTERVAL)
+  fmt.Printf("Starting with interval %v seconds\n", INTERVAL)
   for true {
     fmt.Println(time.Now().Format("[15:04:05]"))
 
@@ -56,7 +56,7 @@ func doPing() {
     elapsed := time.Since(startTime).Seconds()
 
     fmt.Printf("error: %s\n", err.Error())
-    fmt.Printf("down for %.2f seconds\n", elapsed)
+    fmt.Printf("down for %.f seconds\n", elapsed)
   } else {
     if isDown {
       startTime = time.Now()
@@ -71,6 +71,6 @@ func doPing() {
     //fmt.Printf("round-trip min/avg/max/stddev = %v/%v/%v/%v\n",
       //stats.MinRtt, stats.AvgRtt, stats.MaxRtt, stats.StdDevRtt)
     fmt.Printf("avg speed = %v\n", stats.AvgRtt)
-    fmt.Printf("up for %.2f seconds\n", elapsed)
+    fmt.Printf("up for %.f seconds\n", elapsed)
   }
 }
