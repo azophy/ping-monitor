@@ -1,6 +1,8 @@
 Ping Monitor
 ============
 
+![Screenshot](screenshot.png)
+
 Simple internet connection monitor using ping mechanism. Continously pinging certain target (default to google), and provide up-to-date connection information.
 
 ## How to use

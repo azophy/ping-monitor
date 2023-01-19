@@ -4,6 +4,7 @@ import (
   "fmt"
   "time"
   "errors"
+  "math"
 
   "github.com/go-ping/ping"
 )
@@ -35,8 +36,7 @@ func main() {
   pinger.Count = 1
   startTime = time.Now()
 
-  // start monitorin
-  fmt.Printf("Starting with interval %v seconds\n", INTERVAL)
+  fmt.Printf("Starting monitor with interval %v seconds\n", INTERVAL)
   for true {
     fmt.Println(time.Now().Format("[15:04:05]"))
 
@@ -49,28 +49,32 @@ func main() {
 func doPing() {
   err := pinger.Run() // Blocks until finished.
   if err != nil {
+    fmt.Printf("error: %s\n", err.Error())
+
     if !isDown {
       startTime = time.Now()
       isDown = true
     }
     elapsed := time.Since(startTime).Seconds()
+    elapsedText := fmt.Sprintf("%.f seconds", math.Mod(elapsed, 60))
+    if elapsed > 60.0 {
+      elapsedText = fmt.Sprintf("%.f minutes %s", elapsed/60, elapsedText)
+    }
 
-    fmt.Printf("error: %s\n", err.Error())
-    fmt.Printf("down for %.f seconds\n", elapsed)
+    fmt.Printf("down for %s\n", elapsedText)
   } else {
     if isDown {
       startTime = time.Now()
       isDown = false
     }
     elapsed := time.Since(startTime).Seconds()
+    elapsedText := fmt.Sprintf("%.f seconds", math.Mod(elapsed, 60))
+    if elapsed > 60.0 {
+      elapsedText = fmt.Sprintf("%.f minutes %s", elapsed/60, elapsedText)
+    }
 
     stats := pinger.Statistics() // get send/receive/duplicate/rtt stats
-    //fmt.Printf("\n--- %s ping statistics ---\n", stats.Addr)
-    //fmt.Printf("%d packets transmitted, %d packets received, %v%% packet loss\n",
-      //stats.PacketsSent, stats.PacketsRecv, stats.PacketLoss)
-    //fmt.Printf("round-trip min/avg/max/stddev = %v/%v/%v/%v\n",
-      //stats.MinRtt, stats.AvgRtt, stats.MaxRtt, stats.StdDevRtt)
     fmt.Printf("avg speed = %v\n", stats.AvgRtt)
-    fmt.Printf("up for %.f seconds\n", elapsed)
+    fmt.Printf("up for %s\n", elapsedText)
   }
 }
